@@ -85,8 +85,12 @@ const Game = (props) => {
     const [playGameOverSound] = useSound(gameOverSound)
 
     //runs once on component mount [ AFTER THIS I UNDERSTOOD THE IMPORTANCE OF THE MATHS CHAPTERS I LEARNED- PERMUTATION & COMBINATION AND STATISTICS]
-   useEffect(() => {
-    if (currentUser === 'Player 1' && users.length === 2) {
+useEffect(() => {
+    console.log("👀 Watching for init:", { currentUser, users, gameOver })  // <== Add here
+
+    if (currentUser === 'Player 1' && users.length === 2 && !gameOver) {
+        console.log("✅ Emitting initGameState from Player 1")
+
         const shuffledCards = shuffleArray(PACK_OF_CARDS)
 
         const player1Deck = shuffledCards.splice(0, 7)
@@ -107,15 +111,16 @@ const Game = (props) => {
         socket.emit('initGameState', {
             gameOver: false,
             turn: 'Player 1',
-            player1Deck: [...player1Deck],
-            player2Deck: [...player2Deck],
+            player1Deck,
+            player2Deck,
             currentColor: playedCardsPile[0].charAt(1),
             currentNumber: playedCardsPile[0].charAt(0),
-            playedCardsPile: [...playedCardsPile],
-            drawCardPile: [...drawCardPile]
+            playedCardsPile,
+            drawCardPile
         })
     }
 }, [users, currentUser])
+
 
 
     useEffect(() => {
