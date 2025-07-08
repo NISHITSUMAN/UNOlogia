@@ -85,38 +85,25 @@ const Game = (props) => {
     const [playGameOverSound] = useSound(gameOverSound)
 
     //runs once on component mount [ AFTER THIS I UNDERSTOOD THE IMPORTANCE OF THE MATHS CHAPTERS I LEARNED- PERMUTATION & COMBINATION AND STATISTICS]
-    useEffect(() => {
-        //shuffle PACK_OF_CARDS array
+   useEffect(() => {
+    if (currentUser === 'Player 1' && users.length === 2) {
         const shuffledCards = shuffleArray(PACK_OF_CARDS)
 
-        //extract first 7 elements to player1Deck
         const player1Deck = shuffledCards.splice(0, 7)
-
-        //extract first 7 elements to player2Deck
         const player2Deck = shuffledCards.splice(0, 7)
 
-        //extract random card from shuffledCards and check if its not an action card
         let startingCardIndex
-        while(true) {
+        while (true) {
             startingCardIndex = Math.floor(Math.random() * 94)
-            if(shuffledCards[startingCardIndex]==='skipR' || shuffledCards[startingCardIndex]==='_R' || shuffledCards[startingCardIndex]==='D2R' ||
-            shuffledCards[startingCardIndex]==='skipG' || shuffledCards[startingCardIndex]==='_G' || shuffledCards[startingCardIndex]==='D2G' ||
-            shuffledCards[startingCardIndex]==='skipB' || shuffledCards[startingCardIndex]==='_B' || shuffledCards[startingCardIndex]==='D2B' ||
-            shuffledCards[startingCardIndex]==='skipY' || shuffledCards[startingCardIndex]==='_Y' || shuffledCards[startingCardIndex]==='D2Y' ||
-            shuffledCards[startingCardIndex]==='W' || shuffledCards[startingCardIndex]==='D4W') {
-                continue;
+            const card = shuffledCards[startingCardIndex]
+            if (!['skipR', '_R', 'D2R', 'skipG', '_G', 'D2G', 'skipB', '_B', 'D2B', 'skipY', '_Y', 'D2Y', 'W', 'D4W'].includes(card)) {
+                break
             }
-            else
-                break;
         }
 
-        //extract the card from that startingCardIndex into the playedCardsPile
         const playedCardsPile = shuffledCards.splice(startingCardIndex, 1)
-
-        //store all remaining cards into drawCardPile
         const drawCardPile = shuffledCards
 
-        //send initial state to server
         socket.emit('initGameState', {
             gameOver: false,
             turn: 'Player 1',
@@ -127,7 +114,9 @@ const Game = (props) => {
             playedCardsPile: [...playedCardsPile],
             drawCardPile: [...drawCardPile]
         })
-    }, [])
+    }
+}, [users, currentUser])
+
 
     useEffect(() => {
         socket.on('initGameState', ({ gameOver, turn, player1Deck, player2Deck, currentColor, currentNumber, playedCardsPile, drawCardPile }) => {
