@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PACK_OF_CARDS from '../utils/packOfCards'
 import shuffleArray from '../utils/shuffleArray'
-import io from 'socket.io-client'
+import { io } from 'socket.io-client'
 import queryString from 'query-string'
 import Spinner from './Spinner'
 import useSound from 'use-sound'
@@ -22,8 +22,8 @@ import gameOverSound from '../assets/sounds/game-over-sound.mp3'
 //DRAW 4 WILD - 600
 
 let socket
-// const ENDPOINT = 'http://localhost:5000'
-const ENDPOINT = 'https://uno-online-multiplayer.herokuapp.com/'
+const ENDPOINT = 'https://unologia.onrender.com/'
+
 
 const Game = (props) => {
     const data = queryString.parse(props.location.search)
@@ -43,7 +43,8 @@ const Game = (props) => {
             "timeout" : 10000,                  
             "transports" : ["websocket"]
         }
-        socket = io.connect(ENDPOINT, connectionOptions)
+        socket = io(ENDPOINT, connectionOptions)
+
 
         socket.emit('join', {room: room}, (error) => {
             if(error)
