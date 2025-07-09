@@ -124,16 +124,30 @@ useEffect(() => {
 
 
     useEffect(() => {
-        socket.on('initGameState', ({ gameOver, turn, player1Deck, player2Deck, currentColor, currentNumber, playedCardsPile, drawCardPile }) => {
-            setGameOver(gameOver)
-            setTurn(turn)
-            setPlayer1Deck(player1Deck)
-            setPlayer2Deck(player2Deck)
-            setCurrentColor(currentColor)
-            setCurrentNumber(currentNumber)
-            setPlayedCardsPile(playedCardsPile)
-            setDrawCardPile(drawCardPile)
-        })
+        socket.on('initGameState', (data) => {
+  console.log("📦 Received initGameState:", data)
+
+  const {
+    gameOver,
+    turn,
+    player1Deck,
+    player2Deck,
+    currentColor,
+    currentNumber,
+    playedCardsPile,
+    drawCardPile
+  } = data
+
+  setGameOver(gameOver)
+  setTurn(turn)
+  setPlayer1Deck(player1Deck)
+  setPlayer2Deck(player2Deck)
+  setCurrentColor(currentColor)
+  setCurrentNumber(currentNumber)
+  setPlayedCardsPile(playedCardsPile)
+  setDrawCardPile(drawCardPile)
+})
+
 
         socket.on('updateGameState', ({ gameOver, winner, turn, player1Deck, player2Deck, currentColor, currentNumber, playedCardsPile, drawCardPile }) => {
             if (gameOver === true) setGameOver(true)
