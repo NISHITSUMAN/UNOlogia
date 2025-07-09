@@ -60,7 +60,7 @@ const Game = (props) => {
     }, [])
 
     //initialize game state
-    const [gameOver, setGameOver] = useState(true)
+    const [gameOver, setGameOver] = useState(false)
     const [winner, setWinner] = useState('')
     const [turn, setTurn] = useState('')
     const [player1Deck, setPlayer1Deck] = useState([])
@@ -136,7 +136,7 @@ useEffect(() => {
         })
 
         socket.on('updateGameState', ({ gameOver, winner, turn, player1Deck, player2Deck, currentColor, currentNumber, playedCardsPile, drawCardPile }) => {
-            gameOver && setGameOver(gameOver)
+            if (gameOver === true) setGameOver(true)
             gameOver===true && playGameOverSound()
             winner && setWinner(winner)
             turn && setTurn(turn)
